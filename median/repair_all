@@ -7,4 +7,4 @@ angelix src median.c \
     --assert $median_dir/assert_all.json \
     --instr-printf median.c \
     --verbose \
-    --defect if-conditions assignments
+    $@
