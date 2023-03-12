@@ -1,10 +1,8 @@
 #!/bin/bash
 
-median_dir=$(dirname $0)
+dir=$(dirname $0)
+oracle=$dir/oracle_bb
+tests="1 2 3 4 5 6 7"
+assert=$dir/assert_bb.json
 
-angelix src median.c \
-    $median_dir/oracle_bb 1 2 3 4 5 6 7 \
-    --assert $median_dir/assert_bb.json \
-    --instr-printf median.c \
-    --verbose \
-    $@
+$dir/repair $oracle "$tests" $assert $@
