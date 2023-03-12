@@ -12,4 +12,17 @@ angelix src median.c \
     --assert $assert \
     --instr-printf median.c \
     --verbose \
+    --synthesis-levels \
+        alternatives \
+        integer-constants \
+        boolean-constants \
+        variables \
+        basic-arithmetic \
+        basic-logic \
+        basic-inequalities \
+        extended-arithmetic \
+        extended-logic \
+        extended-inequalities \
+        mixed-conditional \
+        conditional-arithmetic \
     $@
