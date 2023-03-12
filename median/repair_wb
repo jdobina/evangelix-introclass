@@ -1,0 +1,10 @@
+#!/bin/bash
+
+median_dir=$(dirname $0)
+
+angelix src median.c \
+    $median_dir/oracle_wb 1 2 3 4 5 6 \
+    --assert $median_dir/assert_wb.json \
+    --instr-printf median.c \
+    --verbose \
+    --defect if-conditions assignments
