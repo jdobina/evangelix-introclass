@@ -19,3 +19,6 @@ all:
 EOF
 
 sed -f $(dirname $0)/instrument_buggy.sed $buggy > $src_dir/$buggy_bn
+
+# Check if the setup is working
+make -C $src_dir
