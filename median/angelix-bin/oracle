@@ -6,11 +6,11 @@ assert-equal () {
 
 [ $# -ne 2 ] && echo "Usage: $0 box test" && exit 1
 
-oracle_dir=$(dirname $0)
+tests_dir=$(dirname $0)/../tests
 box=$1
 test=$2
 
-input=$(<$oracle_dir/tests/$box/$test.in)
-output=$(cat $oracle_dir/tests/$box/$test.out | cut -d '>' -f 2 | sed 's/[^0-9]\+//g')
+input=$(<$tests_dir/$box/$test.in)
+output=$(cat $tests_dir/$box/$test.out | cut -d '>' -f 2 | sed 's/[^0-9]\+//g')
 
 assert-equal "./median $input" "$output"
