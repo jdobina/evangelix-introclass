@@ -15,6 +15,10 @@ angelix src median.c \
     $oracle $tests \
     --assert $assert \
     --verbose \
+    --timeout 3600 \
+    --test-timeout 15 \
+    --klee-timeout 15 \
+    --klee-solver-timeout 15 \
     --synthesis-levels \
         alternatives \
         integer-constants \
