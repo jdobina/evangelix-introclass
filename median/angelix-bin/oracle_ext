@@ -1,0 +1,14 @@
+#!/bin/bash
+
+if [ "$1" -gt 13 ]; then
+    box=ext
+    test=$(($1 - 13))
+elif [ "$1" -gt 7 ]; then
+    box=whitebox
+    test=$(($1 - 7))
+else
+    box=blackbox
+    test=$1
+fi
+
+$(dirname $0)/oracle $box $test
