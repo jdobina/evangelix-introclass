@@ -22,7 +22,7 @@ int main(int argc, char *argv[])
   else if((a < c && c < b) || (b < c && c < a))
     z = c;
 
-  printf("%d\n", z);
+  printf("%d\n", ANGELIX_OUTPUT(int, z, "stdout"));
 
   return 0;
 }
