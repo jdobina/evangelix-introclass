@@ -2,7 +2,7 @@ import os
 import unittest
 import subprocess
 
-class TestAll(unittest.TestCase):
+class TestExt(unittest.TestCase):
     oracle_dir = os.path.dirname(os.path.realpath(__file__))
     oracle = os.path.join(oracle_dir, 'oracle_ext')
 
