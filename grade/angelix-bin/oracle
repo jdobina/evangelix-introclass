@@ -1,0 +1,18 @@
+#!/bin/bash
+
+assert-equal () {
+    diff -q <("${ANGELIX_RUN:-eval}" $1) <(echo "$2") > /dev/null
+}
+
+[ $# -ne 2 ] && echo "Usage: $0 box test" && exit 1
+
+tests_dir=$(dirname $0)/../tests
+box=$1
+test=$2
+
+input=$(<$tests_dir/$box/$test.in)
+output=$(cat $tests_dir/$box/$test.out \
+       | sed -n -e 's/.*Student has an \([ABCD]\) grade.*/\1/p' \
+       -e 's/.*Student has failed.*/F/p' )
+
+assert-equal "./grade $input" "$output"
