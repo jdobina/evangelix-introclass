@@ -1,0 +1,35 @@
+#!/bin/bash
+
+[ $# -lt 3 ] && echo "Usage: $0 oracle tests assert [extra_angelix_args]" && exit 1
+
+oracle=$1
+tests=$2
+assert=$3
+shift 3
+
+if [ ! -d "src" ]; then
+    $(dirname $0)/setup_buggy digits.c || exit 1
+fi
+
+angelix src digits.c \
+    $oracle $tests \
+    --assert $assert \
+    --verbose \
+    --timeout 3600 \
+    --test-timeout 15 \
+    --klee-timeout 15 \
+    --klee-solver-timeout 15 \
+    --synthesis-levels \
+        alternatives \
+        boolean-constants \
+        variables \
+        basic-arithmetic \
+        basic-logic \
+        basic-inequalities \
+        extended-arithmetic \
+        extended-logic \
+        extended-inequalities \
+        mixed-conditional \
+        conditional-arithmetic \
+    --defect if-conditions assignments loop-conditions \
+    $@
