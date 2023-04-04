@@ -1,0 +1,70 @@
+#!/bin/bash
+
+[ $# -lt 5 ] && echo "Usage: $0 tool program repo revision iterations [repair_args]" && exit 1
+
+set -euxo pipefail
+
+tool="$1"
+program="$2"
+repo="$3"
+revision="$4"
+iterations="$5"
+shift 5
+repair_args="$@"
+
+if [ "$tool" != "angelix" -a "$tool" != "evangelix" ]; then
+    echo "invalid tool: $tool" >&2
+    exit 1
+fi
+
+script_dir=$(readlink -f $(dirname $0))
+program_bin_dir=$(readlink -f "$program"/angelix-bin)
+defect_dir=$(readlink -f "$program"/"$repo"/"$revision")
+
+cd "$defect_dir"
+
+rm -f "$tool"_exp_ok "$tool"_exp.log
+
+(
+if [ ! -d src ]; then
+    $script_dir/setup_buggy "$program".c
+fi
+
+repairs="repair_bb repair_all"
+
+tool_results_dir=results/"$tool"
+rm -rf "$tool_results_dir"
+
+for repair in $repairs; do
+    if [ "$repair" = "repair_bb" ]; then
+        eval_test="test_wb.py"
+    elif [ "$repair" = "repair_all" ]; then
+        eval_test="test_all.py"
+    fi
+    eval_test_cmd="python3 $program_bin_dir/$eval_test"
+
+    for ((i = 1; i <= $iterations; i++)); do
+        rm -rf .angelix
+        rm -f *.patch
+
+        "$program_bin_dir"/"$repair" $repair_args
+
+        repair_results_dir="$tool_results_dir"/"$repair"/"$i"
+        mkdir -p "$repair_results_dir"
+        mv .angelix "$repair_results_dir"
+
+        patch=$(ls *.patch || true)
+        if [ -n "$patch" ]; then
+            mv "$patch" "$repair_results_dir"
+            cp -r src "$repair_results_dir"
+            cd "$repair_results_dir"/src
+            patch < ../"$patch"
+            make
+            $eval_test_cmd > ../"$eval_test".out 2>&1 || true
+            cd "$defect_dir"
+        fi
+    done
+done
+
+touch "$tool"_exp_ok
+) 2>&1 | tee "$tool"_exp.log
