@@ -1,6 +1,28 @@
 #!/bin/bash
 
-[ $# -lt 5 ] && echo "Usage: $0 tool program repo revision iterations [repair_args]" && exit 1
+usage() {
+    cat << EOF
+Usage: $0 [-h|-f] tool program revision iterations [repair_args]
+EOF
+}
+
+ignore_finished=true
+while getopts "fh" opt; do
+    case $opt in
+        f)
+            ignore_finished=false
+            ;;
+        h)
+            usage
+            exit 0
+            ;;
+        *)
+            usage
+            exit 1
+    esac
+done
+shift $((OPTIND-1))
+[ $# -lt 5 ] && usage && exit 1
 
 set -euxo pipefail
 
@@ -20,6 +42,11 @@ fi
 script_dir=$(readlink -f $(dirname $0))
 program_bin_dir=$(readlink -f "$program"/angelix-bin)
 defect_dir=$(readlink -f "$program"/"$repo"/"$revision")
+
+if [ "$ignore_finished" = "true" -a -f "$defect_dir"/"$tool"_exp_ok ]; then
+    echo "experiment is already finished for this defect" >&2
+    exit 1
+fi
 
 cd "$defect_dir"
 
