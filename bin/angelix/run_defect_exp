@@ -6,6 +6,10 @@ Usage: $0 [-h|-f] tool program revision iterations [repair_args]
 EOF
 }
 
+fail() {
+    touch "$defect_dir"/"$tool"_exp_fail
+}
+
 ignore_finished=true
 while getopts "fh" opt; do
     case $opt in
@@ -48,9 +52,11 @@ if [ "$ignore_finished" = "true" -a -f "$defect_dir"/"$tool"_exp_ok ]; then
     exit 1
 fi
 
+trap fail ERR
+
 cd "$defect_dir"
 
-rm -f "$tool"_exp_ok "$tool"_exp.log
+rm -f "$tool"_exp_ok "$tool"_exp_fail "$tool"_exp.log
 
 (
 if [ ! -d src ]; then
