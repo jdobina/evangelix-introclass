@@ -2,7 +2,7 @@
 
 usage() {
     cat << EOF
-Usage: $0 [-h|-f] tool program revision iterations [repair_args]
+Usage: $0 [-h] [-f] [-d seconds] tool program revision iterations [repair_args]
 EOF
 }
 
@@ -11,10 +11,14 @@ fail() {
 }
 
 ignore_finished=true
-while getopts "fh" opt; do
+delay=0
+while getopts "d:fh" opt; do
     case $opt in
         f)
             ignore_finished=false
+            ;;
+        d)
+            delay=$OPTARG
             ;;
         h)
             usage
@@ -77,6 +81,8 @@ for repair in $repairs; do
     eval_test_cmd="python3 $program_bin_dir/$eval_test"
 
     for ((i = 1; i <= $iterations; i++)); do
+        sleep $delay
+
         rm -rf .angelix
         rm -f *.patch
 
