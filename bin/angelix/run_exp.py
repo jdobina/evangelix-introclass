@@ -27,9 +27,12 @@ def get_defects(program):
 
     return defects
 
-def run_exp(tool, programs, iterations, tool_args):
+def run_exp(tool, programs, iterations, tool_args, force):
     run_defect_exp_dir = os.path.dirname(os.path.realpath(__file__))
     run_defect_exp = os.path.join(run_defect_exp_dir, 'run_defect_exp')
+    run_defect_exp_opt = []
+    if force:
+        run_defect_exp_opt.append('-f')
 
     for program in sorted(programs):
         defects = get_defects(program)
@@ -43,15 +46,16 @@ def run_exp(tool, programs, iterations, tool_args):
                    '\nrevision: {}'
                   ).format(i, num_defects, program, repo, revision))
             start = time.time()
-            retcode = subprocess.call([run_defect_exp,
-                                       tool,
-                                       program,
-                                       repo,
-                                       revision,
-                                       str(iterations),
-                                       tool_args],
-                                      stdout=subprocess.DEVNULL,
-                                      stderr=subprocess.DEVNULL)
+            retcode = subprocess.call(([run_defect_exp]
+                                       + run_defect_exp_opt
+                                       + [tool,
+                                          program,
+                                          repo,
+                                          revision,
+                                          str(iterations),
+                                          tool_args]),
+                                       stdout=subprocess.DEVNULL,
+                                       stderr=subprocess.DEVNULL)
             end = time.time()
             if retcode == 0:
                 print(('defect experiment finished in {}s'
@@ -71,6 +75,9 @@ if __name__ == '__main__':
     parser.add_argument('iterations', type=int,
                         help='number of repair iterations for each defect')
     parser.add_argument('tool_args', help='tool arguments')
+    parser.add_argument('-f', '--force', action='store_true',
+                        help='force experiment on a defect')
     args = parser.parse_args()
 
-    run_exp(args.tool, args.programs, args.iterations, args.tool_args)
+    run_exp(args.tool, args.programs, args.iterations, args.tool_args,
+            args.force)
