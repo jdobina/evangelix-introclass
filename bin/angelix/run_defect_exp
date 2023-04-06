@@ -47,7 +47,7 @@ script_dir=$(readlink -f $(dirname $0))
 program_bin_dir=$(readlink -f "$program"/angelix-bin)
 defect_dir=$(readlink -f "$program"/"$repo"/"$revision")
 
-if [ "$ignore_finished" = "true" -a -f "$defect_dir"/"$tool"_exp_ok ]; then
+if [[ "$ignore_finished" = "true" && (-f "$defect_dir"/"$tool"_exp_ok || -f "$defect_dir"/"$tool"_exp_fail) ]]; then
     echo "experiment is already finished for this defect" >&2
     exit 1
 fi
