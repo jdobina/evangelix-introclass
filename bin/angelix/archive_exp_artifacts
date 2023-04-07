@@ -1,5 +1,14 @@
 #!/bin/bash
 
-[ $# -ne 1 ] && echo "Usage: $0 archive" && exit 1
+[ $# -ne 1 ] && echo "Usage: $0 program" && exit 1
 
-find . -name '*exp.log' -o -name '*exp_ok' -o -name 'results' | xargs tar czf $1
+
+find $1 \
+    -name '*exp.log' \
+    -o -name '*exp_ok' \
+    -o -name '*exp_fail' \
+    -o -name 'test_result.json' \
+    -o -name 'results' \
+    -o -name 'program-metadata.json' \
+    -o -name 'metadata.json' \
+    | xargs tar czf -
