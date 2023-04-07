@@ -73,13 +73,6 @@ tool_results_dir=results/"$tool"
 rm -rf "$tool_results_dir"
 
 for repair in $repairs; do
-    if [ "$repair" = "repair_bb" ]; then
-        eval_test="test_wb.py"
-    elif [ "$repair" = "repair_all" ]; then
-        eval_test="test_all.py"
-    fi
-    eval_test_cmd="python3 $program_bin_dir/$eval_test"
-
     for ((i = 1; i <= $iterations; i++)); do
         sleep $delay
 
@@ -99,7 +92,7 @@ for repair in $repairs; do
             cd "$repair_results_dir"/src
             patch < ../"$patch"
             make
-            $eval_test_cmd > ../"$eval_test".out 2>&1 || true
+            python3 "$script_dir"/run_tests.py "$program_bin_dir" > test_result.json
             cd "$defect_dir"
         fi
     done
