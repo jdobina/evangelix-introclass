@@ -24,6 +24,7 @@ FIELDNAMES = (
     'angelix_experiment',
     'angelix_repair_bb',
     'angelix_repair_bb_partial',
+    'angelix_repair_bb_timeout',
     'angelix_repair_bb_transforms',
     'angelix_repair_bb_time',
     'angelix_repair_bb_blackbox_pass_count',
@@ -32,6 +33,7 @@ FIELDNAMES = (
     'angelix_repair_bb_whitebox_fail_count',
     'angelix_repair_all',
     'angelix_repair_all_partial',
+    'angelix_repair_all_timeout',
     'angelix_repair_all_transforms',
     'angelix_repair_all_time',
     'angelix_repair_all_blackbox_pass_count',
@@ -41,6 +43,7 @@ FIELDNAMES = (
     'evangelix_experiment',
     'evangelix_repair_bb',
     'evangelix_repair_bb_partial',
+    'evangelix_repair_bb_timeout',
     'evangelix_repair_bb_transforms',
     'evangelix_repair_bb_time',
     'evangelix_repair_bb_blackbox_pass_count',
@@ -49,6 +52,7 @@ FIELDNAMES = (
     'evangelix_repair_bb_whitebox_fail_count',
     'evangelix_repair_all',
     'evangelix_repair_all_partial',
+    'evangelix_repair_all_timeout',
     'evangelix_repair_all_transforms',
     'evangelix_repair_all_time',
     'evangelix_repair_all_blackbox_pass_count',
@@ -62,7 +66,8 @@ def parse_angelix_log(angelix_log):
             ['repaired',
              'repair_partial',
              'repair_time',
-             'repair_transforms'])
+             'repair_transforms',
+             'repair_timeout'])
 
     patch_gen_regex = re.compile(r'''^INFO\s+repair\s+
                                      (?P<patch>partial\s+patch|patch)\s+
@@ -71,6 +76,7 @@ def parse_angelix_log(angelix_log):
                                      .*$
                                   ''', re.X)
     no_patch_regex = re.compile(r'^.*no patch generated in (?P<repair_time>\d+)s$')
+    no_patch_timeout_regex = re.compile(r'^.*failed to generate patch \(timeout\)$')
     apply_transform_regex = re.compile(r'^.*applied (?P<transform>.+) transform$')
     revert_transform_regex = re.compile(r'^.*reverting (?P<transform>.+) transform$')
     patch_sources_regex = re.compile(r'^.*patching sources$')
@@ -87,6 +93,7 @@ def parse_angelix_log(angelix_log):
                 info['repaired'] = False
                 info['repair_partial'] = True
             info['repair_time'] = int(m.group('repair_time'))
+            info['repair_timeout'] = False
             break
 
         m = no_patch_regex.match(line)
@@ -94,6 +101,14 @@ def parse_angelix_log(angelix_log):
             info['repaired'] = False
             info['repair_partial'] = False
             info['repair_time'] = int(m.group('repair_time'))
+            info['repair_timeout'] = False
+            break
+
+        m = no_patch_timeout_regex.match(line)
+        if m:
+            info['repaired'] = False
+            info['repair_partial'] = False
+            info['repair_timeout'] = True
             break
 
         m = partial_fix_regex.match(line)
@@ -186,6 +201,7 @@ def get_defect_results(config):
                     result[tool + '_' + repair + '_partial'] = info['repair_partial']
                     result[tool + '_' + repair + '_transforms'] = "->".join(info['repair_transforms'])
                     result[tool + '_' + repair + '_time'] = info['repair_time']
+                    result[tool + '_' + repair + '_timeout'] = info['repair_timeout']
 
                     repair_test_result_json = os.path.join(repair_dir, 'test_result.json')
                     if not os.path.exists(repair_test_result_json):
