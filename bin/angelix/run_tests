@@ -8,9 +8,9 @@ tools=(angelix)
 repairs=(repair_bb repair_all)
 
 run_tests_in_src() {
-    if [ ! -f test_result.json ]; then
+    if [ ! -f ../test_result.json ]; then
         make
-        python3 $script_dir/run_tests.py $prog_bin_dir > test_result.json
+        python3 $script_dir/run_tests.py $prog_bin_dir > ../test_result.json
     fi
 }
 

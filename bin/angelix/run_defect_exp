@@ -92,7 +92,7 @@ for repair in $repairs; do
             cd "$repair_results_dir"/src
             patch < ../"$patch"
             make
-            python3 "$script_dir"/run_tests.py "$program_bin_dir" > test_result.json
+            python3 "$script_dir"/run_tests.py "$program_bin_dir" > ../test_result.json
             cd "$defect_dir"
         fi
     done
