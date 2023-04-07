@@ -27,5 +27,6 @@ sed -f $prog_bin_dir/instrument_buggy.sed $buggy > $src_dir/$buggy_bn
 # Check if the setup is working
 make -C $src_dir
 cd $src_dir
-python3 $script_dir/check_test_results.py
+python3 $script_dir/run_tests.py ../../../angelix-bin > test_result.json
+python3 $script_dir/check_test_result.py test_result.json ../metadata.json
 echo "SUCCESS"

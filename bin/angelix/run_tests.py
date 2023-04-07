@@ -19,6 +19,7 @@ def run_tests(test_dir):
     sys.path.append(test_dir)
     import test_bb
     import test_wb
+    import test_all
 
     result = {}
     runner = unittest.TextTestRunner()
@@ -28,6 +29,9 @@ def run_tests(test_dir):
 
     suite = unittest.defaultTestLoader.loadTestsFromTestCase(test_wb.TestWhiteBox)
     result['whitebox'] = run_box_tests(runner, suite)
+
+    suite = unittest.defaultTestLoader.loadTestsFromTestCase(test_all.TestAll)
+    result['all'] = run_box_tests(runner, suite)
 
     return result
 
