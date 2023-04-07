@@ -1,0 +1,40 @@
+#!/bin/bash
+
+set -euxo pipefail
+
+script_dir=$(readlink -f $(dirname $0))
+#tools=(angelix evangelix)
+tools=(angelix)
+repairs=(repair_bb repair_all)
+
+run_tests_in_src() {
+    if [ ! -f test_result.json ]; then
+        make
+        python3 $script_dir/run_tests.py $prog_bin_dir > test_result.json
+    fi
+}
+
+run_tests() {
+    defect_dir=$(readlink -f $1)
+    cd $defect_dir
+    prog_bin_dir=$(readlink -f ../../angelix-bin)
+
+    cd src
+    run_tests_in_src
+    cd $defect_dir
+
+    for tool in "${tools[@]}"; do
+        for repair in "${repairs[@]}"; do
+            repair_src_dir=results/"$tool"/"$repair"/1/src
+            if [ -d "$repair_src_dir" ]; then
+                cd "$repair_src_dir"
+                run_tests_in_src
+                cd $defect_dir
+            fi
+        done
+    done
+}
+
+while read defect_dir; do
+    (run_tests $defect_dir)
+done < /dev/stdin
