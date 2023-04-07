@@ -70,11 +70,11 @@ def parse_angelix_log(angelix_log):
                                      (?P<repair_time>\d+)s
                                      .*$
                                   ''', re.X)
-    no_patch_regex = re.compile(r'^no patch generated in (?P<repair_time>\d+)s$')
-    apply_transform_regex = re.compile(r'^applied (?P<transform>.+) transform$')
-    revert_transform_regex = re.compile(r'^reverting (?P<transform>.+) transform$')
-    patch_sources_regex = re.compile(r'^patching sources$')
-    partial_fix_regex = re.compile(r'^Saving partial fix$')
+    no_patch_regex = re.compile(r'^.*no patch generated in (?P<repair_time>\d+)s$')
+    apply_transform_regex = re.compile(r'^.*applied (?P<transform>.+) transform$')
+    revert_transform_regex = re.compile(r'^.*reverting (?P<transform>.+) transform$')
+    patch_sources_regex = re.compile(r'^.*patching sources$')
+    partial_fix_regex = re.compile(r'^.*Saving partial fix$')
 
     info['repair_transforms'] = []
     for line in angelix_log:
