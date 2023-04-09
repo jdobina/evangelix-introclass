@@ -77,7 +77,7 @@ for repair in $repairs; do
         sleep $delay
 
         rm -rf .angelix
-        rm -f *.patch
+        rm -f *.patch*
 
         "$program_bin_dir"/"$repair" $repair_args
 
@@ -85,7 +85,7 @@ for repair in $repairs; do
         mkdir -p "$repair_results_dir"
         mv .angelix "$repair_results_dir"
 
-        patch=$(ls *.patch || true)
+        patch=$(ls *.patch* || true)
         if [ -n "$patch" ]; then
             mv "$patch" "$repair_results_dir"
             cp -r src "$repair_results_dir"
