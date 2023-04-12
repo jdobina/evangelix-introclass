@@ -15,7 +15,7 @@ angelix src grade.c \
     $oracle $tests \
     --assert $assert \
     --verbose \
-    --timeout 3600 \
+    --timeout 7200 \
     --test-timeout 15 \
     --klee-timeout 15 \
     --klee-solver-timeout 15 \

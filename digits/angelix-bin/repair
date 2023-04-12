@@ -15,7 +15,7 @@ angelix src digits.c \
     $oracle $tests \
     --assert $assert \
     --verbose \
-    --timeout 3600 \
+    --timeout 7200 \
     --test-timeout 15 \
     --klee-timeout 15 \
     --klee-solver-timeout 15 \
@@ -31,5 +31,4 @@ angelix src digits.c \
         extended-inequalities \
         mixed-conditional \
         conditional-arithmetic \
-    --defect if-conditions assignments loop-conditions \
     $@
