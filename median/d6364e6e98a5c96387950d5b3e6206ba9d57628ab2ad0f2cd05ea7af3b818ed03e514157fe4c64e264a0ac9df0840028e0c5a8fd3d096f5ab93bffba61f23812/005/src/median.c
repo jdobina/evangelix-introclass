@@ -9,7 +9,6 @@
 #endif
 int main(int argc, char *argv[]) {
 	int data[3], temp=0; //
-	printf("Please enter three numbers separated by spaces > ");
 	data[1] = atoi(argv[1]);
 	data[2] = atoi(argv[2]);
 	data[3] = atoi(argv[3]); //
