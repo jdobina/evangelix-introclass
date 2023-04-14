@@ -53,7 +53,7 @@ defect_dir=$(readlink -f "$program"/"$repo"/"$revision")
 
 if [[ "$ignore_finished" = "true" && (-f "$defect_dir"/"$tool"_exp_ok || -f "$defect_dir"/"$tool"_exp_fail) ]]; then
     echo "experiment is already finished for this defect" >&2
-    exit 1
+    exit 2
 fi
 
 if [ -f "$defect_dir"/setup_buggy_fail ]; then
