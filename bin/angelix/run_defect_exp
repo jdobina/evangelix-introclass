@@ -56,6 +56,12 @@ if [[ "$ignore_finished" = "true" && (-f "$defect_dir"/"$tool"_exp_ok || -f "$de
     exit 1
 fi
 
+if [ -f "$defect_dir"/setup_buggy_fail ]; then
+    echo "can't setup buggy for the experiment" >&2
+    fail
+    exit 1
+fi
+
 trap fail ERR
 
 cd "$defect_dir"
