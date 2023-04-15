@@ -1,3 +1,4 @@
+/int$/N
 s/^\s*int\s\+main\s*(.*)/#include <string.h>\n#ifndef ANGELIX_OUTPUT\n#define ANGELIX_OUTPUT(type, expr, id) expr\n#endif\nint main(int argc, char *argv[])/
 /printf.*Please enter/d
 s/\(^.*\)fgets\s*(\s*\(.*\),\s*\(.*\),\s*stdin\s*);/\1strncpy(\2, argv[1], \3);/
