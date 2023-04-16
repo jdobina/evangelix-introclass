@@ -2,7 +2,7 @@
 
 usage() {
     cat << EOF
-Usage: $0 [-h] [-f] [-d seconds] tool program revision iterations [repair_args]
+Usage: $0 [-h] [-f] [-d seconds] tool program repo revision iterations [repair_args]
 EOF
 }
 
