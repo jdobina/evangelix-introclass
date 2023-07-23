@@ -7,6 +7,7 @@ find $1 \
     -name '*exp.log' \
     -o -name '*exp_ok' \
     -o -name '*exp_fail' \
+    -o -name 'setup_buggy_fail' \
     -o -name 'test_result.json' \
     -o -name 'results' \
     -o -name 'program-metadata.json' \
